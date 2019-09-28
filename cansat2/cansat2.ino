@@ -6,6 +6,8 @@
 #include<Servo.h>
 
 Servo servo;
+int alt =0;
+float zero =0;
 int servoPin = A0;
 Adafruit_BMP280 bmp; 
 RF24 radio(9, 10);
@@ -20,13 +22,15 @@ void setup() {
     Serial.println(F("Sensor BMP280 não foi identificado! Verifique as conexões.")); 
     while(1);}
     servo.attach(servoPin);
-
-    servo.write(0);
+    zero =bmp.readAltitude(1013.25);
+    servo.write(180);
 }
-void loop() {
-servo.write(30);
-delay(1000);
-  servo.write(180);
+void loop() { 
+if(alt>20 ){  
+ servo.write(10); 
+ delay(500); 
+ servo.write(50);
+}
      String aux;
   const char text[] = "Temperatura: ";
      radio.write(&text, sizeof(text));
@@ -50,7 +54,8 @@ delay(1000);
       String aux2;
   const char text2[100] = "Altitude: ";
      radio.write(&text2, sizeof(text2));
-     aux2 =(String)bmp.readAltitude(1013.25);
+     alt = bmp.readAltitude(1013.25)-zero;
+     aux2 =(String)(bmp.readAltitude(1013.25)-zero);
      aux2.toCharArray(text2,30);
      radio.write(&text2, sizeof(text2)); 
      aux2 =String("m");
