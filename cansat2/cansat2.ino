@@ -6,6 +6,7 @@
 #include<Servo.h>
 
 Servo servo;
+int alt_max=0;
 int alt =0;
 float zero =0;
 int servoPin = A0;
@@ -26,9 +27,17 @@ void setup() {
     servo.write(180);
 }
 void loop() { 
-if(alt>20 ){  
- servo.write(10); 
+
+if(alt_max <= alt){
+alt_max = alt;
+}
+else(alt+1 < alt_max && alt_max>10)
+{ 
+ const char flag[] = "Abriu paraquedas";
+     radio.write(&flag, sizeof(flag));  
  delay(500); 
+ servo.write(10); 
+ delay(300); 
  servo.write(50);
 }
      String aux;
